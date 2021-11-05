@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mediumish</title>
+    <description>Jekyll template, Medium styled, free for bloggers.</description>
+    <link>http://localhost:4000/mediumish-theme-jekyll/</link>
+    <atom:link href="http://localhost:4000/mediumish-theme-jekyll/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 05 Nov 2021 17:25:21 +0100</pubDate>
+    <lastBuildDate>Fri, 05 Nov 2021 17:25:21 +0100</lastBuildDate>
+    <generator>Jekyll v3.8.5</generator>
+    
+      <item>
+        <title>Howto propoerly delete an element from a slice in Go</title>
+        <description>&lt;h1 id=&quot;properly-delete-an-element-from-a-slice-in-go&quot;&gt;Properly delete an element from a slice in Go&lt;/h1&gt;
+
+&lt;p&gt;Arrays and slices in Go are a bit different from analogous structrures in other languages (like &lt;code class=&quot;highlighter-rouge&quot;&gt;list&lt;/code&gt; in Python).
+An arrays is contigious container that holds the values, while the slice just holds pointers to the start and the end
+of a region of the container that we’re concerned about. Learn more about &lt;a href=&quot;https://blog.golang.org/slices-intro&quot;&gt;slices and arrays in Go here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This makes deleting a value from a slice a bit tricky.&lt;/p&gt;
+
+&lt;p&gt;There are two ways this can be achieved, depending on whether we want to keep the order of values in the array or not.&lt;/p&gt;
+
+&lt;p&gt;If we want to keep the order of the values, we can slice the array up to the element we want to remove, then append all
+elements after the that:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;e&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;f&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// we want to remove the thrid element &quot;c&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// [a b d e f]&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that we used the expansion expression &lt;code class=&quot;highlighter-rouge&quot;&gt;...&lt;/code&gt; and we’re adding the elements from the slice.&lt;/p&gt;
+
+&lt;p&gt;This gets the job done, but is not very efficient. However the order of the elements will be preserved.&lt;/p&gt;
+
+&lt;p&gt;If we don’t care about the order of elements, we can swap the element we want to remove with the last element of the slice,
+then make the slice to be one element shorter:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;e&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;f&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// we want to remove the thrid element &quot;c&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// [a b f d e]&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// &quot;c&quot; is not in the slice, but the order is not preserved&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This approach is &lt;em&gt;much&lt;/em&gt; faster than the previous approach, but does not preserve the order of elements.&lt;/p&gt;
+
+&lt;p&gt;What is happening behind the scene: remember that in Go, arrays are the container holding the values, and the slice is just
+a structure that points to the start and the end of the part of the array we’re concerned about? In the second case what we
+did was the following:&lt;/p&gt;
+
+&lt;p&gt;We started with something like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;   
+array: [&quot;a&quot;][&quot;b&quot;][&quot;c&quot;][&quot;d&quot;][&quot;e&quot;][&quot;f&quot;]
+       ↑                          ↑
+       |  ┌-----------------------┘
+slice (0, 5)  start at 0 and end at 5
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;the slice starts at the 0th element and ends at the 5th element. The array is the background container holding the values.&lt;/p&gt;
+
+&lt;p&gt;After we swap out “c” with “f”, we then set the slice end at 4 and end up with something likie this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;                   ┌---- swap ----┐
+                   ↓              ↓
+array: [&quot;a&quot;][&quot;b&quot;][&quot;f&quot;][&quot;d&quot;][&quot;e&quot;][&quot;c&quot;]
+       ↑                     ↑
+       |  ┌------------------┘
+slice (0, 4)  start at 0 and end at 4
+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Now the slice ends at the 4th element. Note that the array still holds 6 values, however our slice only “sees” 5.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 15 Jul 2020 19:38:56 +0200</pubDate>
+        <link>http://localhost:4000/mediumish-theme-jekyll/delete-element-from-slice/</link>
+        <guid isPermaLink="true">http://localhost:4000/mediumish-theme-jekyll/delete-element-from-slice/</guid>
+        
+        <category>go</category>
+        
+        <category>golang</category>
+        
+        <category>slice</category>
+        
+        <category>delete</category>
+        
+        
+        <category>go</category>
+        
+      </item>
+    
+      <item>
+        <title>How to increase Travis CI timeout?</title>
+        <description>&lt;p&gt;There are different use cases where Travis jobs could raise the timeout error. Maybe you are trying to install a Python module that takes some time before installing the dependencies e.g:&lt;/p&gt;
+
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;na&quot;&gt;install&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;pip install torch&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;or you are running the Java project tests e.g&lt;/p&gt;
+
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;na&quot;&gt;script&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;mvn package -Dtestng=test.xml&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;or pushing a new image to the Docker registry e.g&lt;/p&gt;
+
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;na&quot;&gt;script&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;docker push $APPLICATION:$IMAGE_VERSION;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The default Travis job timeout is set to 10 min, so in some scenarios the above commands will fail with:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;Timeout (20 minutes) reached. Terminating &quot;...&quot;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To increase the &lt;code class=&quot;highlighter-rouge&quot;&gt;timeouts&lt;/code&gt; travis ci offers a &lt;a href=&quot;https://docs.travis-ci.com/user/common-build-problems/#build-times-out-because-no-output-was-received&quot;&gt;function&lt;/a&gt; that will increase the build timeouts:&lt;/p&gt;
+
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;na&quot;&gt;install&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;travis_wait N mvn install&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;travis_wait n&lt;/code&gt;  where the &lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt; is the minutes by which the waiting time is increased.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Note: You must carefully use &lt;code class=&quot;highlighter-rouge&quot;&gt;travis_wait&lt;/code&gt; since it can extend the build time when there could happen another issue.&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Thu, 11 Jan 2018 00:00:00 +0100</pubDate>
+        <link>http://localhost:4000/mediumish-theme-jekyll/travis-timeouts-wait/</link>
+        <guid isPermaLink="true">http://localhost:4000/mediumish-theme-jekyll/travis-timeouts-wait/</guid>
+        
+        <category>ci</category>
+        
+        <category>travis-ci</category>
+        
+        <category>travis</category>
+        
+        
+        <category>ci</category>
+        
+      </item>
+    
+      <item>
+        <title>Author Reference</title>
+        <description>&lt;h1 id=&quot;april-the-twenty-fifth&quot;&gt;April the twenty-fifth?&lt;/h1&gt;
+</description>
+        <pubDate>Mon, 25 Apr 2016 00:00:00 +0200</pubDate>
+        <link>http://localhost:4000/mediumish-theme-jekyll/author-reference/</link>
+        <guid isPermaLink="true">http://localhost:4000/mediumish-theme-jekyll/author-reference/</guid>
+        
+        
+        <category>vendor</category>
+        
+        <category>bundle</category>
+        
+        <category>ruby</category>
+        
+        <category>2.5.0</category>
+        
+        <category>gems</category>
+        
+        <category>jekyll-feed-0.11.0</category>
+        
+        <category>spec</category>
+        
+        <category>fixtures</category>
+        
+      </item>
+    
+      <item>
+        <title>错误</title>
+        <description></description>
+        <pubDate>Sun, 03 Apr 2016 00:00:00 +0200</pubDate>
+        <link>http://localhost:4000/mediumish-theme-jekyll/2016/04/03/%E9%94%99%E8%AF%AF.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mediumish-theme-jekyll/2016/04/03/%E9%94%99%E8%AF%AF.html</guid>
+        
+        
+        <category>vendor</category>
+        
+        <category>bundle</category>
+        
+        <category>ruby</category>
+        
+        <category>2.5.0</category>
+        
+        <category>gems</category>
+        
+        <category>jekyll-sitemap-1.2.0</category>
+        
+        <category>spec</category>
+        
+        <category>fixtures</category>
+        
+      </item>
+    
+      <item>
+        <title>错误</title>
+        <description></description>
+        <pubDate>Sat, 02 Apr 2016 00:00:00 +0200</pubDate>
+        <link>http://localhost:4000/mediumish-theme-jekyll/2016/04/02/错误.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mediumish-theme-jekyll/2016/04/02/错误.html</guid>
+        
+        
+        <category>vendor</category>
+        
+        <category>bundle</category>
+        
+        <category>ruby</category>
+        
+        <category>2.5.0</category>
+        
+        <category>gems</category>
+        
+        <category>jekyll-sitemap-1.2.0</category>
+        
+        <category>spec</category>
+        
+        <category>fixtures</category>
+        
+      </item>
+    
+      <item>
+        <title>错误</title>
+        <description></description>
+        <pubDate>Fri, 01 Apr 2016 00:00:00 +0200</pubDate>
+        <link>http://localhost:4000/mediumish-theme-jekyll/%E9%94%99%E8%AF%AF/</link>
+        <guid isPermaLink="true">http://localhost:4000/mediumish-theme-jekyll/%E9%94%99%E8%AF%AF/</guid>
+        
+        
+        <category>vendor</category>
+        
+        <category>bundle</category>
+        
+        <category>ruby</category>
+        
+        <category>2.5.0</category>
+        
+        <category>gems</category>
+        
+        <category>jekyll-sitemap-1.2.0</category>
+        
+        <category>spec</category>
+        
+        <category>fixtures</category>
+        
+      </item>
+    
+      <item>
+        <title>Stuck In The Middle</title>
+        <description></description>
+        <pubDate>Sat, 08 Aug 2015 00:00:00 +0200</pubDate>
+        <link>http://localhost:4000/mediumish-theme-jekyll/stuck-in-the-middle/</link>
+        <guid isPermaLink="true">http://localhost:4000/mediumish-theme-jekyll/stuck-in-the-middle/</guid>
+        
+        
+        <category>vendor</category>
+        
+        <category>bundle</category>
+        
+        <category>ruby</category>
+        
+        <category>2.5.0</category>
+        
+        <category>gems</category>
+        
+        <category>jekyll-feed-0.11.0</category>
+        
+        <category>spec</category>
+        
+        <category>fixtures</category>
+        
+      </item>
+    
+      <item>
+        <title>Author Detail</title>
+        <description>&lt;h1 id=&quot;december-the-twelfth-actually&quot;&gt;December the twelfth, actually.&lt;/h1&gt;
+</description>
+        <pubDate>Mon, 18 May 2015 00:00:00 +0200</pubDate>
+        <link>http://localhost:4000/mediumish-theme-jekyll/author-detail/</link>
+        <guid isPermaLink="true">http://localhost:4000/mediumish-theme-jekyll/author-detail/</guid>
+        
+        
+        <category>vendor</category>
+        
+        <category>bundle</category>
+        
+        <category>ruby</category>
+        
+        <category>2.5.0</category>
+        
+        <category>gems</category>
+        
+        <category>jekyll-feed-0.11.0</category>
+        
+        <category>spec</category>
+        
+        <category>fixtures</category>
+        
+      </item>
+    
+      <item>
+        <title>Pre</title>
+        <description>&lt;pre&gt;Line 1
+Line 2
+Line 3&lt;/pre&gt;
+</description>
+        <pubDate>Tue, 12 May 2015 00:00:00 +0200</pubDate>
+        <link>http://localhost:4000/mediumish-theme-jekyll/pre/</link>
+        <guid isPermaLink="true">http://localhost:4000/mediumish-theme-jekyll/pre/</guid>
+        
+        
+        <category>vendor</category>
+        
+        <category>bundle</category>
+        
+        <category>ruby</category>
+        
+        <category>2.5.0</category>
+        
+        <category>gems</category>
+        
+        <category>jekyll-feed-0.11.0</category>
+        
+        <category>spec</category>
+        
+        <category>fixtures</category>
+        
+      </item>
+    
+      <item>
+        <title>Liquid</title>
+        <description>
+&lt;p&gt;Liquid is rendered.&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 12 May 2015 00:00:00 +0200</pubDate>
+        <link>http://localhost:4000/mediumish-theme-jekyll/liquid/</link>
+        <guid isPermaLink="true">http://localhost:4000/mediumish-theme-jekyll/liquid/</guid>
+        
+        
+        <category>vendor</category>
+        
+        <category>bundle</category>
+        
+        <category>ruby</category>
+        
+        <category>2.5.0</category>
+        
+        <category>gems</category>
+        
+        <category>jekyll-feed-0.11.0</category>
+        
+        <category>spec</category>
+        
+        <category>fixtures</category>
+        
+      </item>
+    
+  </channel>
+</rss>
